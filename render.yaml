@@ -2,7 +2,7 @@ services:
   - type: web
     name: academic-ai-api
     runtime: python
-    buildCommand: CARGO_HOME=/tmp/cargo RUSTFLAGS="-C target-dir=/tmp/rust-target" PYDANTIC_CORE_SKIP_BUILD=true pip install --no-binary :all: -r requirements.txt
+    buildCommand: CARGO_HOME=/tmp/cargo RUSTFLAGS="-C target-dir=/tmp/rust-target" PYDANTIC_CORE_SKIP_BUILD=true pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
