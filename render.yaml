@@ -9,3 +9,7 @@ services:
         value: 3.11.0
       - key: OPENROUTER_API_KEY
         sync: false
+      - key: CARGO_HOME
+        value: /tmp/cargo
+      - key: RUSTFLAGS
+        value: -C target-dir=/tmp/rust-target
