@@ -2,16 +2,10 @@ services:
   - type: web
     name: academic-ai-api
     runtime: python
-    buildCommand: CARGO_HOME=/tmp/cargo RUSTFLAGS="-C target-dir=/tmp/rust-target" PYDANTIC_CORE_SKIP_BUILD=true pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r ai-research-assistant/api/requirements.txt
+    startCommand: uvicorn ai-research-assistant.api.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: OPENROUTER_API_KEY
         sync: false
-      - key: CARGO_HOME
-        value: /tmp/cargo
-      - key: RUSTFLAGS
-        value: -C target-dir=/tmp/rust-target
-      - key: PYDANTIC_CORE_SKIP_BUILD
-        value: "true"
