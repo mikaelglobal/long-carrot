@@ -36,7 +36,7 @@ STYLE:
 class RequestBody(BaseModel):
     prompt: str
 
-@app.post("/api/generate")
+@app.post("/generate")
 def generate_text(data: RequestBody):
     payload = {
         "model": "tngtech/deepseek-r1t2-chimera:free",
@@ -62,10 +62,10 @@ def generate_text(data: RequestBody):
 
     return response.json()
 
-@app.get("/api/")
+@app.get("/")
 def health_check():
     return {"status": "ok", "message": "AI Research Assistant API"}
 
-@app.get("/api/health")
+@app.get("/health")
 def health():
     return {"status": "healthy"}
