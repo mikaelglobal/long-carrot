@@ -1,5 +1,0 @@
-[build]
-target-dir = "/tmp/rust-target"
-
-[registries.crates-io]
-protocol = "sparse"
