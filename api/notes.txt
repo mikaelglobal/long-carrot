@@ -8,3 +8,5 @@ Ran to see if it functions.
 
 (14-feb-2026)
 Switched to vercel, hoping it works
+deepseek/deepseek-r1:free
+deepseek/deepseek-r1-0528:free

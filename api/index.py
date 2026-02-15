@@ -44,7 +44,7 @@ def generate_text(data: RequestBody):
         return {"error": "OPENROUTER_API_KEY not configured"}
     
     payload = {
-        "model": "deepseek/deepseek-r1:free",
+        "model": "deepseek/deepseek-r1-0528:free",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": data.prompt}
@@ -54,7 +54,7 @@ def generate_text(data: RequestBody):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://your-app.vercel.app",
+        "HTTP-Referer": "https://mumuai.vercel.app",
         "X-Title": "AI Research Assistant"
     }
 
