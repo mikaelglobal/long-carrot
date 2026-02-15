@@ -45,9 +45,7 @@ def generate_text(data: RequestBody):
     
     # SPEED SETTINGS - Change model here for faster responses
     MODELS = {
-        "fastest": "meta-llama/llama-3.1-8b-instruct:free",     # ⚡ Super fast, good quality
-        "balanced": "google/gemini-2.0-flash-exp:free",         # ⚡⚡ Fast + great quality  
-        "quality": "deepseek/deepseek-r1-0528:free",            # 🐌 Slow but better reasoning
+             "balanced": "deepseek/deepseek-r1-0528:free",
     }
     
     # 🔥 CHANGE THIS FOR SPEED: "fastest" or "balanced"

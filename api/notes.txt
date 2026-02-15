@@ -12,4 +12,4 @@ deepseek/deepseek-r1:free
 deepseek/deepseek-r1-0528:free
 
 working
-added more models
+swited the UI
