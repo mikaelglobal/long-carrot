@@ -1,0 +1,10 @@
+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
+
+This is the prototype for mumu AI
+(Modular Unified Machine for Understanding)
+
+#### (05-feb-2026) ####
+Ran to see if it functions.
+
+(14-feb-2026)
+Switched to vercel, hoping it works
