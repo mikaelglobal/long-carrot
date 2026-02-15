@@ -12,4 +12,5 @@ deepseek/deepseek-r1:free
 deepseek/deepseek-r1-0528:free
 
 working
-swited the UI
+switched the UI
+added 2 moldels

@@ -63,6 +63,88 @@
             color: #333;
         }
         
+        /* Model Toggle Styles */
+        .model-selector {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .model-selector-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .toggle-container {
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+        
+        .toggle-option {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+        
+        .toggle-option:hover {
+            background: #f8f9fa;
+        }
+        
+        .toggle-option.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .model-description {
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .model-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-fast {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-smart {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
         textarea {
             width: 100%;
             padding: 15px;
@@ -202,6 +284,23 @@
         </div>
         
         <div class="main">
+            <!-- Model Selector -->
+            <div class="model-selector">
+                <div class="model-selector-title">🤖 Select AI Model</div>
+                <div class="toggle-container">
+                    <button class="toggle-option active" data-model="fom" onclick="selectModel('fom')">
+                        ⚡ FOM 1.0
+                    </button>
+                    <button class="toggle-option" data-model="rvm" onclick="selectModel('rvm')">
+                        🧠 RVM 1.0
+                    </button>
+                </div>
+                <div class="model-description" id="modelDescription">
+                    <span class="model-badge badge-fast">FAST</span>
+                    <span>Fast Output Model - Quick responses for general queries</span>
+                </div>
+            </div>
+            
             <div class="input-group">
                 <label for="prompt">Research Question</label>
                 <textarea 
@@ -237,6 +336,46 @@
 
     <script>
         let startTime;
+        let selectedModel = "fom";  // Default to FOM
+        
+        // Model configuration
+        const modelConfig = {
+            fom: {
+                name: "FOM 1.0",
+                fullName: "Fast Output Model",
+                badge: "FAST",
+                badgeClass: "badge-fast",
+                description: "Fast Output Model - Quick responses for general queries",
+                icon: "⚡"
+            },
+            rvm: {
+                name: "RVM 1.0", 
+                fullName: "Research Verifying Model",
+                badge: "SMART",
+                badgeClass: "badge-smart",
+                description: "Research Verifying Model - Deep reasoning for complex research",
+                icon: "🧠"
+            }
+        };
+        
+        function selectModel(model) {
+            selectedModel = model;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.model === model) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update description
+            const config = modelConfig[model];
+            document.getElementById('modelDescription').innerHTML = `
+                <span class="model-badge ${config.badgeClass}">${config.badge}</span>
+                <span>${config.description}</span>
+            `;
+        }
         
         async function generate() {
             const prompt = document.getElementById('prompt').value.trim();
@@ -261,7 +400,10 @@
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt })
+                    body: JSON.stringify({ 
+                        prompt: prompt,
+                        model: selectedModel  // Send selected model
+                    })
                 });
                 
                 const data = await response.json();
@@ -272,13 +414,13 @@
                                    'Response received but could not parse content';
                     
                     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
-                    const model = data.model || 'Unknown';
+                    const modelName = data.selected_model_name || modelConfig[selectedModel].name;
                     const tokens = data.usage?.total_tokens || 'N/A';
                     
                     document.getElementById('resultContent').textContent = content;
                     document.getElementById('stats').innerHTML = `
                         ⏱️ <strong>Time:</strong> ${elapsedTime}s | 
-                        🤖 <strong>Model:</strong> ${model} | 
+                        🤖 <strong>Model:</strong> ${modelName} | 
                         🔢 <strong>Tokens:</strong> ${tokens}
                     `;
                     document.getElementById('stats').style.display = 'block';
