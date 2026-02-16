@@ -3,14 +3,12 @@ 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
 This is the prototype for mumu AI
 (Modular Unified Machine for Understanding)
 
-#### (05-feb-2026) ####
+(05-feb-2026)
 Ran to see if it functions.
 
 (14-feb-2026)
 Switched to vercel, hoping it works
-deepseek/deepseek-r1:free
-deepseek/deepseek-r1-0528:free
-
 working
 switched the UI
 added 2 moldels
+Working, switching to mumu interface (16-feb-2026)

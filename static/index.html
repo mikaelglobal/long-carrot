@@ -3,466 +3,866 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Research Assistant</title>
+    <title>MUMU AI - Modular Unified Machine for Understanding</title>
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #06b6d4;
+            --accent-light: #22d3ee;
+            --danger: #ef4444;
+            --success: #10b981;
+            --dark-bg: #0f172a;
+            --dark-secondary: #1e293b;
+            --dark-tertiary: #334155;
+            --light-text: #f1f5f9;
+            --muted-text: #94a3b8;
+            --border: #1e293b;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            height: 100vh;
             overflow: hidden;
         }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        
-        .header h1 { 
-            font-size: 2.5em; 
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .header p { 
-            opacity: 0.95; 
-            font-size: 1.1em;
-        }
-        
-        .main { 
-            padding: 40px 30px; 
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        /* Model Toggle Styles */
-        .model-selector {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .model-selector-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .toggle-container {
+
+        .app-container {
             display: flex;
-            gap: 10px;
-            background: white;
-            border-radius: 10px;
-            padding: 5px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            height: 100vh;
         }
-        
-        .toggle-option {
+
+        /* ============ MAIN CHAT AREA ============ */
+        .chat-section {
             flex: 1;
-            padding: 12px 20px;
-            border: none;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light-text);
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--muted-text);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Messages Container */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
             background: transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            color: #6c757d;
         }
-        
-        .toggle-option:hover {
-            background: #f8f9fa;
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--dark-tertiary);
+            border-radius: 4px;
         }
-        
-        .toggle-option.active {
-            background: #667eea;
+
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: var(--muted-text);
+        }
+
+        /* Message Groups */
+        .message-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 60%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message.user .message-content {
+            align-items: flex-end;
+        }
+
+        .bubble {
+            padding: 14px 18px;
+            border-radius: 16px;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .bubble.user {
+            background: var(--primary);
             color: white;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            border-radius: 20px 20px 4px 20px;
         }
-        
-        .model-description {
-            margin-top: 12px;
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #6c757d;
+
+        .bubble.ai {
+            background: var(--dark-secondary);
+            color: var(--light-text);
+            border: 1px solid var(--dark-tertiary);
+            border-radius: 20px 20px 20px 4px;
+        }
+
+        /* Message actions */
+        .message-actions {
             display: flex;
             align-items: center;
             gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
-        
-        .model-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            background: var(--dark-secondary);
+            border: 1px solid var(--dark-tertiary);
+            color: var(--muted-text);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: var(--dark-tertiary);
+            color: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        .action-btn.copy-btn:hover::after {
+            content: 'Copy';
+            position: absolute;
+            bottom: -30px;
+            white-space: nowrap;
             font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            background: var(--dark-tertiary);
+            border-radius: 4px;
+            pointer-events: none;
         }
-        
-        .badge-fast {
-            background: #d4edda;
-            color: #155724;
+
+        .action-btn.copied {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
         }
-        
-        .badge-smart {
-            background: #cce5ff;
-            color: #004085;
+
+        /* Reactions */
+        .reactions {
+            display: flex;
+            gap: 6px;
         }
-        
+
+        .reaction-btn {
+            background: transparent;
+            border: 1px solid var(--dark-tertiary);
+            color: var(--muted-text);
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .reaction-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent-light);
+        }
+
+        .reaction-btn.active {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .reaction-btn.active.thumbs-down {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Thinking indicator */
+        .thinking {
+            display: flex;
+            gap: 4px;
+            padding: 14px 18px;
+        }
+
+        .thinking-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: bounce 1.4s infinite;
+        }
+
+        .thinking-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .thinking-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-section {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.5) 100%);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .textarea-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
         textarea {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
+            max-height: 120px;
+            padding: 12px 16px;
+            background: var(--dark-secondary);
+            border: 1px solid var(--dark-tertiary);
+            color: var(--light-text);
             border-radius: 12px;
-            font-size: 16px;
             font-family: inherit;
-            resize: vertical;
-            transition: border-color 0.3s;
-            min-height: 120px;
+            font-size: 15px;
+            resize: none;
+            transition: all 0.2s ease;
         }
-        
-        textarea:focus { 
-            outline: none; 
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+
+        textarea::placeholder {
+            color: var(--muted-text);
         }
-        
-        button {
-            background: #667eea;
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
         }
-        
-        button:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); 
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
         }
-        
-        button:disabled { 
-            opacity: 0.6; 
-            cursor: not-allowed; 
-            transform: none; 
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        
-        .btn-secondary {
-            background: #6c757d;
+
+        /* ============ MEMORIES SIDEBAR ============ */
+        .sidebar {
+            width: 320px;
+            background: var(--dark-secondary);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        
-        .btn-secondary:hover {
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
-        }
-        
-        .loading { 
-            display: none; 
-            text-align: center; 
-            padding: 30px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
-        
-        .result {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .result h3 {
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 1.3em;
-        }
-        
-        .result-content { 
-            line-height: 1.8; 
-            white-space: pre-wrap;
-            color: #444;
-            font-size: 15px;
-        }
-        
-        .error {
-            background: #fee;
-            color: #c00;
+
+        .sidebar-header {
             padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-            display: none;
-            border-left: 4px solid #c00;
+            border-bottom: 1px solid var(--border);
         }
-        
-        .stats {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #dee2e6;
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .memory-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .stat {
+            background: var(--dark-tertiary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 16px;
+        }
+
+        .stat-label {
+            color: var(--muted-text);
+            margin-top: 2px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: var(--dark-tertiary);
+            border-radius: 3px;
+        }
+
+        .memory-item {
+            background: var(--dark-tertiary);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .memory-item:hover {
+            background: var(--dark-tertiary);
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .memory-item-timestamp {
+            font-size: 11px;
+            color: var(--muted-text);
+            margin-bottom: 6px;
+        }
+
+        .memory-item-text {
             font-size: 13px;
-            color: #6c757d;
+            color: var(--light-text);
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
-        
-        /* Responsive */
-        @media (max-width: 600px) {
-            .header h1 { font-size: 2em; }
-            .main { padding: 25px 20px; }
-            .button-group {
-                flex-direction: column;
+
+        .memory-item-meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 10px;
+        }
+
+        .memory-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted-text);
+        }
+
+        .empty-state-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 280px;
             }
+
+            .message-content {
+                max-width: 70%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                z-index: 100;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .message-content {
+                max-width: 80%;
+            }
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .speaking {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* ============ UTILITY ============ */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🤖 AI Research Assistant</h1>
-            <p>Your academic research partner powered by AI</p>
+    <div class="app-container">
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="logo">MUMU</div>
+                    <div class="header-info">
+                        <div class="header-title">MUMU AI</div>
+                        <div class="header-subtitle">Modular Unified Machine for Understanding</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="message-group">
+                    <div class="message">
+                        <div class="message-content">
+                            <div class="bubble ai">
+                                 Welcome to MUMU AI 🚀<br><br>I'm your intelligent assistant, ready to help you with research, analysis, and problem-solving. Start by typing your question below.
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-btn copy-btn" onclick="copyMessage(this)">📋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <div class="textarea-wrapper">
+                        <textarea 
+                            id="promptInput" 
+                            placeholder="Ask me anything... (Ctrl+Enter to send)"
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
         </div>
-        
-        <div class="main">
-            <!-- Model Selector -->
-            <div class="model-selector">
-                <div class="model-selector-title">🤖 Select AI Model</div>
-                <div class="toggle-container">
-                    <button class="toggle-option active" data-model="fom" onclick="selectModel('fom')">
-                        ⚡ FOM 1.0
-                    </button>
-                    <button class="toggle-option" data-model="rvm" onclick="selectModel('rvm')">
-                        🧠 RVM 1.0
-                    </button>
+
+        <!-- Memories Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    💾 Memory Bank
                 </div>
-                <div class="model-description" id="modelDescription">
-                    <span class="model-badge badge-fast">FAST</span>
-                    <span>Fast Output Model - Quick responses for general queries</span>
+                <div class="memory-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="totalMemories">0</div>
+                        <div class="stat-label">Stored</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="sessionMemories">0</div>
+                        <div class="stat-label">Session</div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="input-group">
-                <label for="prompt">Research Question</label>
-                <textarea 
-                    id="prompt" 
-                    placeholder="Example: Explain the impact of artificial intelligence on modern education systems..."
-                >Explain quantum computing in simple terms</textarea>
+            <div class="sidebar-content" id="memoriesContent">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🧠</div>
+                    <div class="empty-state-text">No memories yet.<br>Start a conversation to build your memory bank.</div>
+                </div>
             </div>
-            
-            <div class="button-group">
-                <button onclick="generate()" id="generateBtn">
-                    ✨ Generate Response
-                </button>
-                <button onclick="clearAll()" class="btn-secondary" id="clearBtn">
-                    🗑️ Clear
-                </button>
-            </div>
-            
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p><strong>Generating response...</strong></p>
-                <p style="font-size: 14px; color: #6c757d; margin-top: 10px;">This may take 5-30 seconds</p>
-            </div>
-            
-            <div class="result" id="result">
-                <h3>📝 Response</h3>
-                <div class="result-content" id="resultContent"></div>
-                <div class="stats" id="stats"></div>
-            </div>
-            
-            <div class="error" id="error"></div>
         </div>
     </div>
 
     <script>
-        let startTime;
-        let selectedModel = "fom";  // Default to FOM
-        
-        // Model configuration
-        const modelConfig = {
-            fom: {
-                name: "FOM 1.0",
-                fullName: "Fast Output Model",
-                badge: "FAST",
-                badgeClass: "badge-fast",
-                description: "Fast Output Model - Quick responses for general queries",
-                icon: "⚡"
-            },
-            rvm: {
-                name: "RVM 1.0", 
-                fullName: "Research Verifying Model",
-                badge: "SMART",
-                badgeClass: "badge-smart",
-                description: "Research Verifying Model - Deep reasoning for complex research",
-                icon: "🧠"
+        const OPENROUTER_API_KEY = ''; // Set via environment
+        let conversationHistory = [];
+        let memories = [];
+
+        // Textarea auto-height
+        const textarea = document.getElementById('promptInput');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send on Ctrl+Enter
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                sendMessage();
             }
-        };
-        
-        function selectModel(model) {
-            selectedModel = model;
-            
-            // Update toggle buttons
-            document.querySelectorAll('.toggle-option').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.model === model) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // Update description
-            const config = modelConfig[model];
-            document.getElementById('modelDescription').innerHTML = `
-                <span class="model-badge ${config.badgeClass}">${config.badge}</span>
-                <span>${config.description}</span>
+        });
+
+        async function sendMessage() {
+            const prompt = document.getElementById('promptInput').value.trim();
+            if (!prompt) return;
+
+            const messagesContainer = document.getElementById('messagesContainer');
+            const sendBtn = document.getElementById('sendBtn');
+
+            // Add user message
+            messagesContainer.innerHTML += `
+                <div class="message-group">
+                    <div class="message user">
+                        <div class="message-content">
+                            <div class="bubble user">${escapeHtml(prompt)}</div>
+                            <div class="message-actions">
+                                <button class="action-btn copy-btn" onclick="copyMessage(this)">📋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `;
-        }
-        
-        async function generate() {
-            const prompt = document.getElementById('prompt').value.trim();
-            
-            if (!prompt) {
-                alert('Please enter a research question');
-                return;
-            }
-            
-            const btn = document.getElementById('generateBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            
-            btn.disabled = true;
-            clearBtn.disabled = true;
-            startTime = Date.now();
-            
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-            
+
+            conversationHistory.push({ role: 'user', content: prompt });
+            document.getElementById('promptInput').value = '';
+            textarea.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            // Add thinking indicator
+            const thinkingId = `thinking-${Date.now()}`;
+            messagesContainer.innerHTML += `
+                <div class="message-group" id="${thinkingId}">
+                    <div class="message">
+                        <div class="message-content">
+                            <div class="bubble ai thinking">
+                                <div class="thinking-dot"></div>
+                                <div class="thinking-dot"></div>
+                                <div class="thinking-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         prompt: prompt,
-                        model: selectedModel  // Send selected model
+                        model: 'fom'
                     })
                 });
-                
+
                 const data = await response.json();
-                
+
+                // Remove thinking indicator
+                document.getElementById(thinkingId).remove();
+
                 if (response.ok && !data.error) {
                     const content = data.choices?.[0]?.message?.content || 
                                    data.response || 
-                                   'Response received but could not parse content';
-                    
-                    const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
-                    const modelName = data.selected_model_name || modelConfig[selectedModel].name;
-                    const tokens = data.usage?.total_tokens || 'N/A';
-                    
-                    document.getElementById('resultContent').textContent = content;
-                    document.getElementById('stats').innerHTML = `
-                        ⏱️ <strong>Time:</strong> ${elapsedTime}s | 
-                        🤖 <strong>Model:</strong> ${modelName} | 
-                        🔢 <strong>Tokens:</strong> ${tokens}
+                                   'Response received';
+
+                    conversationHistory.push({ role: 'assistant', content });
+
+                    // Add AI response with reactions
+                    const responseId = `response-${Date.now()}`;
+                    messagesContainer.innerHTML += `
+                        <div class="message-group" id="${responseId}">
+                            <div class="message">
+                                <div class="message-content">
+                                    <div class="bubble ai">${escapeHtml(content)}</div>
+                                    <div class="message-actions">
+                                        <button class="action-btn copy-btn" onclick="copyMessage(this)">📋</button>
+                                        <div class="reactions">
+                                            <button class="reaction-btn" onclick="toggleReaction(this, 'thumbs-up')">👍</button>
+                                            <button class="reaction-btn thumbs-down" onclick="toggleReaction(this, 'thumbs-down')">👎</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    document.getElementById('stats').style.display = 'block';
-                    document.getElementById('result').style.display = 'block';
+
+                    // Add to memories
+                    addMemory(prompt, content);
                 } else {
-                    throw new Error(data.error || 'Failed to generate response');
+                    const errorMsg = data.error || 'Failed to generate response';
+                    messagesContainer.innerHTML += `
+                        <div class="message-group">
+                            <div class="message">
+                                <div class="message-content">
+                                    <div class="bubble ai" style="color: #ef4444;">
+                                        ❌ Error: ${escapeHtml(errorMsg)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
             } catch (error) {
-                document.getElementById('error').innerHTML = `
-                    <strong>❌ Error:</strong> ${error.message}
-                    <br><br>
-                    <small>Check console for details or try again.</small>
+                document.getElementById(thinkingId).remove();
+                messagesContainer.innerHTML += `
+                    <div class="message-group">
+                        <div class="message">
+                            <div class="message-content">
+                                <div class="bubble ai" style="color: #ef4444;">
+                                    ❌ Error: ${escapeHtml(error.message)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 `;
-                document.getElementById('error').style.display = 'block';
-                console.error('Full error:', error);
             } finally {
-                document.getElementById('loading').style.display = 'none';
-                btn.disabled = false;
-                clearBtn.disabled = false;
+                sendBtn.disabled = false;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
-        
-        function clearAll() {
-            document.getElementById('prompt').value = '';
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('prompt').focus();
+
+        function copyMessage(btn) {
+            const bubble = btn.closest('.message-content').querySelector('.bubble');
+            const text = bubble.textContent || bubble.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                btn.classList.add('copied');
+                const originalText = btn.textContent;
+                btn.textContent = '✓';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.textContent = originalText;
+                }, 2000);
+            });
         }
-        
-        // Keyboard shortcuts
-        document.getElementById('prompt').addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + Enter to submit
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                generate();
+
+        function toggleReaction(btn, type) {
+            btn.classList.toggle('active');
+            if (type === 'thumbs-up') {
+                // Add memory of positive reaction
+                const bubble = btn.closest('.message-content').querySelector('.bubble');
+                const content = bubble.textContent || bubble.innerText;
+                console.log('Positive feedback on:', content.substring(0, 50));
             }
+        }
+
+        function addMemory(prompt, response) {
+            const memory = {
+                id: Date.now(),
+                timestamp: new Date(),
+                prompt,
+                response: response.substring(0, 100) + (response.length > 100 ? '...' : ''),
+                fullResponse: response,
+                tokens: Math.ceil(response.length / 4)
+            };
+
+            memories.push(memory);
+            updateMemoriesDisplay();
+        }
+
+        function updateMemoriesDisplay() {
+            const memoriesContent = document.getElementById('memoriesContent');
+            document.getElementById('totalMemories').textContent = memories.length;
+            document.getElementById('sessionMemories').textContent = memories.length;
+
+            if (memories.length === 0) {
+                memoriesContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧠</div>
+                        <div class="empty-state-text">No memories yet.<br>Start a conversation to build your memory bank.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            memoriesContent.innerHTML = memories.map(m => `
+                <div class="memory-item" onclick="loadMemory(${m.id})">
+                    <div class="memory-item-timestamp">${formatTime(m.timestamp)}</div>
+                    <div class="memory-item-text"><strong>Q:</strong> ${escapeHtml(m.prompt.substring(0, 60))}...</div>
+                    <div class="memory-item-meta">
+                        <span class="memory-badge">${m.tokens} tokens</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadMemory(id) {
+            const memory = memories.find(m => m.id === id);
+            if (memory) {
+                document.getElementById('promptInput').value = memory.prompt;
+                document.getElementById('promptInput').focus();
+            }
+        }
+
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Focus textarea on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('promptInput').focus();
         });
-        
-        // Auto-focus on load
-        window.onload = function() {
-            document.getElementById('prompt').focus();
-        };
     </script>
 </body>
 </html>
