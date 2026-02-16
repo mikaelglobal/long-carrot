@@ -12,3 +12,4 @@ working
 switched the UI
 added 2 moldels
 Working, switching to mumu interface (16-feb-2026)
+added logos
