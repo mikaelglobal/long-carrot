@@ -47,12 +47,12 @@ def generate_text(data: RequestBody):
     # MODEL CONFIGURATIONS
     MODELS = {
         "fom": {
-            "id": "qwen/qwen-2.5-72b-instruct:free",  # FOM 1.0 - Fast Output Model
+            "id": "qwen/qwen3-4b:free",  # FOM 1.0 - Fast Output Model
             "name": "FOM 1.0",
             "description": "Fast Output Model"
         },
         "rvm": {
-            "id": "openai/gpt-4o-mini-2024-07-18:free",  # RVM 1.0 - Research Verifying Model
+            "id": "openai/gpt-oss-20b:free",  # RVM 1.0 - Research Verifying Model
             "name": "RVM 1.0", 
             "description": "Research Verifying Model"
         }
@@ -87,32 +87,8 @@ def generate_text(data: RequestBody):
             timeout=60
         )
         result = response.json()
-
-        # If the upstream returned an error object, normalize to a string
-        if not response.ok:
-            err_msg = None
-            if isinstance(result, dict):
-                err = result.get("error")
-                if isinstance(err, dict) and "message" in err:
-                    err_msg = err.get("message")
-                elif isinstance(err, str):
-                    err_msg = err
-                elif "message" in result:
-                    err_msg = result.get("message")
-            if not err_msg:
-                try:
-                    import json as _json
-                    err_msg = _json.dumps(result)
-                except Exception:
-                    err_msg = str(result)
-            return {"error": err_msg}
-
-        # Success: ensure result is a dict and include selected model name
-        if isinstance(result, dict):
-            result["selected_model_name"] = selected_config["name"]
-        else:
-            result = {"response": result, "selected_model_name": selected_config["name"]}
-
+        # Add selected model info to response
+        result["selected_model_name"] = selected_config["name"]
         return result
     except Exception as e:
         return {"error": str(e)}
