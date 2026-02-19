@@ -5,11 +5,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "build": "echo 'No build step needed for Workers'"
-  },
-  "devDependencies": {
-    "wrangler": "^4.67.0"
+    "dev": "echo 'dev not needed in Pages'",
+    "deploy": "echo 'deploy not needed in Pages'",
+    "build": "echo 'No build step needed for Pages'"
   }
 }
