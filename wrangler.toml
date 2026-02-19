@@ -1,0 +1,16 @@
+name = "mumu-ai"
+main = "src/index.js"
+compatibility_date = "2024-12-16"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment Variables
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "./"

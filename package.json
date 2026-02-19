@@ -1,0 +1,16 @@
+{
+  "name": "mumu-ai",
+  "version": "1.0.0",
+  "description": "MUMU AI - Academic Research Assistant on Cloudflare Workers",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "echo 'No build step needed for Workers'"
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  },
+  "dependencies": {}
+}
