@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-AIMLAPI_API_KEY = os.getenv("AIMLAPI_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 SYSTEM_PROMPT = """
 You are MUMU AI (Modular Unified Machine for Understanding), an advanced academic research assistant specifically designed for university-level projects and scholarly work.
@@ -153,18 +153,18 @@ class RequestBody(BaseModel):
 
 @app.post("/api/generate")
 def generate_text(data: RequestBody):
-    if not AIMLAPI_API_KEY:
-        return {"error": "AIMLAPI_API_KEY not configured"}
+    if not OPENROUTER_API_KEY:
+        return {"error": "OPENROUTER_API_KEY not configured"}
     
     # MODEL CONFIGURATIONS
     MODELS = {
         "fom": {
-            "id": "gemma-3n-e4b-it",  # FOM 1.0 - Fast Output Model
+            "id": "qwen/qwen3-4b:free",  # FOM 1.0 - Fast Output Model
             "name": "FOM 1.0",
             "description": "Fast Output Model"
         },
         "rvm": {
-            "id": "gemma-3-12b-it",  # RVM 1.0 - Research Verifying Model
+            "id": "openai/gpt-oss-20b:free",  # RVM 1.0 - Research Verifying Model
             "name": "RVM 1.0", 
             "description": "Research Verifying Model"
         }
@@ -188,13 +188,16 @@ def generate_text(data: RequestBody):
     }
 
     headers = {
-        "Authorization": f"Bearer {AIMLAPI_API_KEY}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://mumuai.vercel.app",
+        "X-Title": "MUMU AI - Academic Research Assistant",
+        "X-Description": "Modular Unified Machine for Understanding"
     }
 
     try:
         response = requests.post(
-            "https://api.aimlapi.com/chat/completions",
+            "https://openrouter.ai/api/v1/chat/completions",
             json=payload,
             headers=headers,
             timeout=60
@@ -218,7 +221,7 @@ def generate_text(data: RequestBody):
 
 @app.get("/api/health")
 def health():
-    return {"status": "healthy", "api_key_set": bool(AIMLAPI_API_KEY)}
+    return {"status": "healthy", "api_key_set": bool(OPENROUTER_API_KEY)}
 
 # ============ FRONTEND SERVING ============
 
