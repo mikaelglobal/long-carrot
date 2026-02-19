@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import requests
 import os
@@ -159,12 +160,12 @@ def generate_text(data: RequestBody):
     # MODEL CONFIGURATIONS
     MODELS = {
         "fom": {
-            "id": "gemma-3n-e4b-it",  # FOM 1.0 - Fast Output Model
+            "id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",  # FOM 1.0 - Fast Output Model
             "name": "FOM 1.0",
             "description": "Fast Output Model"
         },
         "rvm": {
-            "id": "gemma-3-12b-it",  # RVM 1.0 - Research Verifying Model
+            "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",  # RVM 1.0 - Research Verifying Model
             "name": "RVM 1.0", 
             "description": "Research Verifying Model"
         }
@@ -219,6 +220,9 @@ def generate_text(data: RequestBody):
 @app.get("/api/health")
 def health():
     return {"status": "healthy", "api_key_set": bool(AIMLAPI_API_KEY)}
+
+# ============ STATIC FILES SERVING ============
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ============ FRONTEND SERVING ============
 
