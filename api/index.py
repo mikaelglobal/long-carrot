@@ -160,12 +160,12 @@ def generate_text(data: RequestBody):
     # MODEL CONFIGURATIONS
     MODELS = {
         "fom": {
-            "id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",  # FOM 1.0 - Fast Output Model
+            "id": "google/gemma-3n-E4B-it",  # FOM 1.0 - Fast Output Model
             "name": "FOM 1.0",
             "description": "Fast Output Model"
         },
         "rvm": {
-            "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",  # RVM 1.0 - Research Verifying Model
+            "id": "google/gemma-3-12b-it",  # RVM 1.0 - Research Verifying Model
             "name": "RVM 1.0", 
             "description": "Research Verifying Model"
         }
