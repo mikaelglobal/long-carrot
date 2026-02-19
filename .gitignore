@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.local
+.env.*
+/.pnp
+.pnp.js
+dist/
+build/
+.DS_Store
+/.vite
+/.parcel-cache
