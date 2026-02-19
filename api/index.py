@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-AIMLAPI_API_KEY = os.getenv("AIMLAPI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 SYSTEM_PROMPT = """
 You are MUMU AI (Modular Unified Machine for Understanding), an advanced academic research assistant specifically designed for university-level projects and scholarly work.
@@ -154,18 +154,18 @@ class RequestBody(BaseModel):
 
 @app.post("/api/generate")
 def generate_text(data: RequestBody):
-    if not AIMLAPI_API_KEY:
-        return {"error": "AIMLAPI_API_KEY not configured"}
+    if not DEEPSEEK_API_KEY:
+        return {"error": "DEEPSEEK_API_KEY not configured"}
     
     # MODEL CONFIGURATIONS
     MODELS = {
         "fom": {
-            "id": "google/gemma-3n-E4B-it",  # FOM 1.0 - Fast Output Model
+            "id": "deepseek-chat",  # FOM 1.0 - Fast Output Model
             "name": "FOM 1.0",
             "description": "Fast Output Model"
         },
         "rvm": {
-            "id": "google/gemma-3-12b-it",  # RVM 1.0 - Research Verifying Model
+            "id": "deepseek-reasoner",  # RVM 1.0 - Research Verifying Model
             "name": "RVM 1.0", 
             "description": "Research Verifying Model"
         }
@@ -189,13 +189,13 @@ def generate_text(data: RequestBody):
     }
 
     headers = {
-        "Authorization": f"Bearer {AIMLAPI_API_KEY}",
+        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
         "Content-Type": "application/json"
     }
 
     try:
         response = requests.post(
-            "https://api.aimlapi.com/chat/completions",
+            "https://api.deepseek.com/chat/completions",
             json=payload,
             headers=headers,
             timeout=60
@@ -219,7 +219,7 @@ def generate_text(data: RequestBody):
 
 @app.get("/api/health")
 def health():
-    return {"status": "healthy", "api_key_set": bool(AIMLAPI_API_KEY)}
+    return {"status": "healthy", "api_key_set": bool(DEEPSEEK_API_KEY)}
 
 # ============ STATIC FILES SERVING ============
 app.mount("/static", StaticFiles(directory="static"), name="static")
