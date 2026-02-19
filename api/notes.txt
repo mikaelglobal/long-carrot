@@ -13,3 +13,14 @@ switched the UI
 added 2 moldels
 Working, switching to mumu interface (16-feb-2026)
 added logos
+
+        "max_tokens": 4000,      # Increased for more comprehensive responses
+        "temperature": 0.7,      # Balanced creativity and consistency
+        "top_p": 0.9,           # Nucleus sampling for quality
+        "frequency_penalty": 0.3,  # Reduce repetition
+        "presence_penalty": 0.2    # Encourage topic diversity
+
+
+git add .
+git commit -m "commited new changes"
+git push origin main
