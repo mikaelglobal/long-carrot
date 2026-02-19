@@ -10,7 +10,6 @@
     "build": "echo 'No build step needed for Workers'"
   },
   "devDependencies": {
-    "wrangler": "latest"
-  },
-  "dependencies": {}
+    "wrangler": "^4.67.0"
+  }
 }
