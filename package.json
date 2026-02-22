@@ -1,12 +1,9 @@
 {
   "name": "mumu-ai",
   "version": "1.0.0",
-  "description": "MUMU AI - Academic Research Assistant on Cloudflare Workers",
-  "main": "src/index.js",
+  "description": "MUMU AI - Academic Research Assistant on Cloudflare Pages",
   "type": "module",
   "scripts": {
-    "dev": "echo 'dev not needed in Pages'",
-    "deploy": "echo 'deploy not needed in Pages'",
-    "build": "echo 'No build step needed for Pages'"
+    "build": "echo 'No build step needed'"
   }
 }

@@ -1,55 +1,47 @@
-# MUMU AI - Cloudflare Workers
+# MUMU AI - Cloudflare Pages
 
-Academic research assistant powered by DeepSeek API, running on Cloudflare Workers.
-
-## Quick Start
-
-1. **Install dependencies**
-   ``ash
-   npm install
-   ``
-
-2. **Create .env.local**
-   ``
-   DEEPSEEK_API_KEY=sk-your-key-here
-   ``
-
-3. **Test locally**
-   ``ash
-   npm run dev
-   ``
-   Visit http://localhost:8787
-
-4. **Deploy**
-   ``ash
-   wrangler login
-   wrangler deploy
-   ``
+Academic research assistant powered by DeepSeek API, running on Cloudflare Pages with Pages Functions.
 
 ## Project Structure
 
-``
+```
 .
-+-- src/index.js          # Cloudflare Worker
-+-- public/               # Static files (HTML, CSS, images)
-+-- wrangler.toml         # Worker config
-+-- package.json          # Dependencies
-+-- START_HERE.md         # Setup guide
-``
+├── public/              # Static files served by Cloudflare Pages
+│   ├── index.html       # Main frontend
+│   ├── app.jsx          # React app
+│   └── _routes.json     # Route config (API routes → Functions)
+├── functions/           # Cloudflare Pages Functions (serverless API)
+│   └── api/
+│       ├── generate.js  # POST /api/generate
+│       └── health.js    # GET /api/health
+├── wrangler.toml        # Pages config
+└── package.json
+```
+
+## Cloudflare Pages Dashboard Settings
+
+| Setting | Value |
+|---|---|
+| Build command | *(leave blank or `echo done`)* |
+| Build output directory | `public` |
+| Root directory | `/` |
+
+## Environment Variables (set in Pages dashboard)
+
+- `DEEPSEEK_API_KEY` — Your DeepSeek API key (already configured ✓)
 
 ## API Endpoints
 
-- POST /api/generate - Generate text
-- GET /api/health - Health check
-- GET / - Homepage
+- `POST /api/generate` — Generate text (handled by `functions/api/generate.js`)
+- `GET /api/health` — Health check (handled by `functions/api/health.js`)
 
 ## Models
 
-- om - Fast Output Model (default)
-- vm - Research Verifying Model
+- `fom` — Fast Output Model (`deepseek-chat`)
+- `rvm` — Research Verifying Model (`deepseek-reasoner`)
 
-## Environment Variables
+## Local Development
 
-- DEEPSEEK_API_KEY - Your DeepSeek API key (required)
-
-For detailed setup instructions, see START_HERE.md.
+```bash
+npx wrangler pages dev public --compatibility-date=2024-12-16
+```
