@@ -1,4 +1,4 @@
-name = "mumu-ai"
+name = "long-carrot"
 compatibility_date = "2024-12-16"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "public"
