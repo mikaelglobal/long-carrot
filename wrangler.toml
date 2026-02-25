@@ -1,7 +1,4 @@
-name = "mumuai"
+name = "mumu-ai"
 compatibility_date = "2024-12-16"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "public"
-
-[assets]
-directory = "./public"
