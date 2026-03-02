@@ -59,17 +59,11 @@ body {
     margin-bottom: 32px;
 }
 
-.logo-container {
-    width: 38px;
-    height: 38px;
-    background: var(--primary);
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bg-deep);
-    font-weight: 800;
-    font-size: 18px;
+.sidebar-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover;
 }
 
 .logo-text {
@@ -232,6 +226,26 @@ header {
     color: var(--bg-deep);
 }
 
+.header-logo-small {
+    width: 120px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.small-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: var(--transition);
+}
+
+.small-logo:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
 .chat-viewport {
     flex: 1;
     overflow-y: auto;
@@ -268,19 +282,23 @@ header {
 }
 
 .msg-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    background: var(--bg-subtle);
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+}
+
+.avatar-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .msg-row.ai .msg-avatar {
     background: var(--primary-glow);
-    color: var(--primary);
     border: 1px solid var(--primary);
 }
 
@@ -288,7 +306,7 @@ header {
     line-height: 1.7;
     font-size: 1.05rem;
     color: var(--text-main);
-    padding-left: 36px;
+    padding-left: 40px;
 }
 
 .msg-content code {
@@ -310,6 +328,38 @@ header {
 .msg-content strong {
     color: var(--primary);
     font-weight: 600;
+}
+
+/* Welcome Message with Logo */
+.welcome-message .msg-content {
+    padding-left: 40px;
+}
+
+.welcome-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-logo-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 24px;
+    object-fit: cover;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+
+.welcome-content h2 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    background: linear-gradient(to right, #fff, var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-content p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
 }
 
 .thinking-indicator {
@@ -418,11 +468,18 @@ textarea::placeholder {
 .footer-note {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .footer-note span {
     color: var(--primary);
+}
+
+.inline-logo {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
 /* Custom Scrollbar */
@@ -431,21 +488,7 @@ textarea::placeholder {
 ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-/* Welcome Screen */
-.welcome-message {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-}
-
-.welcome-message h2 {
-    font-size: 2rem;
-    margin-bottom: 16px;
-    background: linear-gradient(to right, #fff, var(--text-muted));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
+/* Quick Prompts */
 .quick-prompts {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -469,6 +512,7 @@ textarea::placeholder {
     transform: translateY(-2px);
 }
 
+/* Empty State with Logo */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -479,8 +523,35 @@ textarea::placeholder {
     color: var(--text-dim);
 }
 
-.empty-state-icon {
-    font-size: 48px;
+.empty-state-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
     margin-bottom: 16px;
     opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    header {
+        padding: 0 20px;
+    }
+    
+    .input-anchor {
+        padding: 20px;
+    }
+    
+    .quick-prompts {
+        grid-template-columns: 1fr;
+    }
+    
+    .welcome-logo-large {
+        width: 80px;
+        height: 80px;
+    }
 }

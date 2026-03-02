@@ -68,8 +68,8 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
-                <div class="logo-container">
-                    <img src="static/images/MUMU_AI_0.png" alt="MUMU AI Logo" class="logo-image"></div>
+                <!-- Original MUMU AI Logo Image -->
+                <img src="/static/images/MUMU_AI_0.png" alt="MUMU AI" class="sidebar-logo">
                 <div class="logo-text">MUMU AI</div>
             </div>
             <button class="new-chat-btn" onclick="startNewChat()">
@@ -81,7 +81,8 @@
             <div class="nav-label">Memory Bank</div>
             <div id="memoriesContainer">
                 <div class="empty-state">
-                    <div class="empty-state-icon">📚</div>
+                    <!-- Memory icon using logo style -->
+                    <img src="/static/images/MUMU_AI_0.png" alt="" class="empty-state-logo">
                     <div>No memories yet.<br>Start a conversation to build context.</div>
                 </div>
             </div>
@@ -100,22 +101,27 @@
                 <div class="model-tab" data-model="rvm">RVM 1.0</div>
             </div>
 
-            <div style="width: 120px; text-align: right;">
-                <svg width="20" height="20" fill="var(--text-muted)" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            <div class="header-logo-small">
+                <img src="/static/images/MUMU_AI_0.png" alt="MUMU AI" class="small-logo">
             </div>
         </header>
 
         <div class="chat-viewport" id="chatViewport">
             <div class="chat-boundary" id="chatContainer">
-                <div class="msg-row ai">
+                <!-- Welcome message with logo -->
+                <div class="msg-row ai welcome-message">
                     <div class="msg-header">
                         <div class="msg-avatar">
-                            <img src="static/images/MUMU_AI_0.png" alt="MUMU AI Avatar" class="avatar-image">
+                            <img src="/static/images/MUMU_AI_0.png" alt="MUMU" class="avatar-logo">
                         </div>
                         <span>MUMU RESEARCH ASSISTANT</span>
                     </div>
                     <div class="msg-content">
-                        Hello. I am the Modular Unified Machine for Understanding. How can I assist with your academic research today?
+                        <div class="welcome-content">
+                            <img src="/static/images/MUMU_AI_0.png" alt="MUMU AI" class="welcome-logo-large">
+                            <h2>Welcome to MUMU AI</h2>
+                            <p>I am the Modular Unified Machine for Understanding. How can I assist with your academic research today?</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -134,7 +140,8 @@
                         <span>↩</span> Enter to send · Shift+Enter for new line
                     </div>
                     <div class="footer-note">
-                        <span>✓</span> Citation Engine: Active
+                        <img src="/static/images/MUMU_AI_0.png" alt="" class="inline-logo">
+                        <span>Citation Engine: Active</span>
                     </div>
                 </div>
             </div>
